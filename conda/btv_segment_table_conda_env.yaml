@@ -1,0 +1,11 @@
+name: btv_seg_table_conda_env
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::fastqc=0.11.*
+  - bioconda::multiqc=1.12
+  - bioconda::bowtie2=2.4.*
+  - bioconda::cutadapt=3.5
+  - bioconda::samtools=1.14
+    # - bioconda::seqtk=1.3

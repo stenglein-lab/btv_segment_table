@@ -1,0 +1,47 @@
+#!/bin/bash
+
+sam=$1
+
+if [ "$#" -ne 1 ]; then
+   echo "usage: $0 sam_file"
+   exit 1
+fi
+
+btvs=( 2 10 )
+segs=( 1 2 3 4 5 6 7 8 9 10 )
+
+# header line
+printf "\n"
+printf $1
+printf "\n"
+printf "segment"
+for btv in ${btvs[@]}
+do
+   printf "\tBTV%s" "$btv"
+done
+printf "\n"
+
+# data lines
+for seg in ${segs[@]}
+do
+   # first column:
+   printf "%s" "$seg"
+
+   # data columns
+   for btv in ${btvs[@]}
+   do
+      refseq_id="BTV${btv}_seg${seg}"
+      mapping_reads=`tally_sam_subjects $sam | grep "$refseq_id	" | cut -f 2`
+
+      # if no matches
+      if [[ -z "$mapping_reads" ]]
+      then
+         mapping_reads="0"
+      fi
+
+      printf "\t%s" "$mapping_reads"
+   done
+
+   printf "\n"
+done
+printf "\n"

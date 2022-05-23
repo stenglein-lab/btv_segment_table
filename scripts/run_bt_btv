@@ -1,0 +1,9 @@
+#!/bin/bash
+
+bc=$1
+index=BTVrefseq
+
+f1=${bc}_R1_f.fastq
+f2=${bc}_R2_f.fastq
+
+./run_bt_align_paired_endtoend $f1 $f2 $index
