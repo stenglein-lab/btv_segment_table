@@ -45,7 +45,7 @@ Singularity containers will be automatically downloaded and stored in a director
 
 ### BTV Reference Sequence
 
-The BTV reference sequences must be supplied to the pieline in FASTA format.  The pipeline comes with a default reference sequence file, [here](./input/refseq/BTV_refseq.fasta)).
+The BTV reference sequences must be supplied to the pipeline in FASTA format.  The pipeline comes with a default reference sequence file, [here](./input/refseq/btv_refseq.fasta)).
 
 It is possible to provide a FASTA file with different BTV reference sequences.  When you run the pipeline, simply use the --refseq_fasta command line option, for instance:
 
@@ -57,7 +57,7 @@ nextflow run stenglein-lab/btv_segment_table -profile singularity --fastq_dir /p
 
 The BTV reference sequences are expected to be named BTV#_seg#, for instance: BTV2_seg8 or BTV17_seg1.  If sequences are named differently, the pipeline will error.
 
-See [this file](./input/refseq/BTV_refseq.fasta) for an example of BTV reference sequences with correct naming.
+See [this file](./input/refseq/btv_refseq.fasta) for an example of BTV reference sequences with correct naming.
 
 ### Primers
 
