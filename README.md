@@ -15,6 +15,15 @@ A pipeline to quantify #s of reads mapping to bluetongue virus (BTV) segments in
 nextflow run stenglein-lab/btv_segment_table -profile singularity --fastq_dir /path/to/fastq
 ```
 
+## Output
+
+The pipeline output will be placed in a `results` directory in the directory you run the nextflow command from (for this reason, it is good to run each analysis in a dedicated directory).  
+
+The main pipeline output is two tables:
+
+1. segment_tables.txt: this file contains the #s of reads mapping to each segment for each BTV genotype in each dataset.
+2. all_segment_counts_tidy.txt: this file contains the #s of reads mapping to each segment for each dataset and genotype. This is in tidyverse-style 'tidy' = 'long' [format](https://tidyr.tidyverse.org/articles/tidy-data.html), so would be appropriate for import into an R script and further analysis using tidyverse/ggplot2.  
+
 ## Dependencies
 
 This pipeline has two main dependencies: nextflow and singularity.  These programs must be installed on your computer to run this pipeline.
@@ -91,3 +100,4 @@ We would use the [simple_scheduler script](https://github.com/stenglein-lab/sten
 
 The pipeline does basically the same workflow now and looking at these simpler bash scripts can help you understand what is happening.  The current nextflow/dsl2/singularity/nf-core implementation is powerful but it can be more difficult to follow what the pipeline is actually doing.
 
+Note that if you run the pipeline from github, as described above, the pipeline code will be downloaded and cached in directory: `$HOME/.nextflow/assets/stenglein-lab/btv_segment_table/`
