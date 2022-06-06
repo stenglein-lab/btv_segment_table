@@ -90,7 +90,9 @@ nextflow run stenglein-lab/btv_segment_table -profile singularity --bt_mode loca
 
 ## Old way of running this pipeline
 
-Before this nextflow implementation, we used a series of bash scripts to analyze datasets.  The main steps where:
+I implemented this pipeline in nextflow/[dsl2](https://www.nextflow.io/docs/latest/dsl2.html) syntax, and designed it to be [run from github](https://www.nextflow.io/docs/latest/sharing.html).  I also followed the [nf-core way](https://nf-co.re/developers/guidelines) of using dsl2 modules and used some off-the-shelf [nf-core modules](https://github.com/nf-core/modules). This pipeline is relatively simple so in some ways using this approach may be overly complicated.  But I had been meaning to learn dsl2 nextflow, so I used this as a learning opportunity.
+
+Before this nextflow implementation, we used a series of bash scripts to analyze datasets.  The main steps were:
 
 1. Clean up data using a script like [this one](./scripts/run_preprocessing_pipeline_one_sample_btv)
 2. Map reads to a BTV reference sequence, using a script like [this](./scripts/run_bt_align_paired_endtoend)
@@ -101,3 +103,16 @@ We would use the [simple_scheduler script](https://github.com/stenglein-lab/sten
 The pipeline does basically the same workflow now and looking at these simpler bash scripts can help you understand what is happening.  The current nextflow/dsl2/singularity/nf-core implementation is powerful but it can be more difficult to follow what the pipeline is actually doing.
 
 Note that if you run the pipeline from github, as described above, the pipeline code will be downloaded and cached in directory: `$HOME/.nextflow/assets/stenglein-lab/btv_segment_table/`
+
+
+
+
+#### nf-core modules:
+
+This pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).
+
+> The nf-core framework for community-curated bioinformatics pipelines.
+>
+> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.
+>
+> Nat Biotechnol. 2020 Feb 13. doi: 10.1038/s41587-020-0439-x.
