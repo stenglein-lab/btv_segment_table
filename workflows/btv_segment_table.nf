@@ -1,8 +1,11 @@
 include { FASTQC   as FASTQC_PRE      } from '../modules/nf-core/modules/fastqc/main'
 include { CUTADAPT                    } from '../modules/nf-core/modules/cutadapt/main'
 include { FASTQC   as FASTQC_POST     } from '../modules/nf-core/modules/fastqc/main'
-include { BT2_BUILD                   } from '../modules/nf-core/modules/bowtie2/build/main'
-include { BT2_ALIGN                   } from '../modules/nf-core/modules/bowtie2/align/main'
+include { BOWTIE2_BUILD               } from '../modules/nf-core/modules/bowtie2/build/main'
+include { BOWTIE2_ALIGN               } from '../modules/nf-core/modules/bowtie2/align/main'
+include { EXTRACT_READ_MAPPING_COUNTS } from '../modules/local/extract_read_mapping_counts.nf'
+include { PREPEND_TSV_WITH_ID         } from '../modules/local/prepend_tsv_with_id.nf'
+include { MAKE_SEGMENT_TABLE          } from '../modules/local/make_segment_table.nf'
 include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
@@ -43,21 +46,37 @@ workflow BTV_SEGMENT_TABLE {
   // run fastqc on input reads
   FASTQC_PRE ( ch_reads )
   
-  ch_versions = ch_versions.mix(FASTQC_PRE.out.versions)      
+  ch_versions = ch_versions.mix ( FASTQC_PRE.out.versions )      
 
   // run cutadapt to trim reads
   // cutadapt parameters are specified in ./conf/modules.config
   CUTADAPT ( ch_reads )
 
-  ch_versions = ch_versions.mix(CUTADAPT.out.versions)      
+  ch_versions = ch_versions.mix ( CUTADAPT.out.versions ) 
 
   // run fastqc on post trimmed reads
   FASTQC_POST ( CUTADAPT.out.reads )
 
-  // map reads to viral refseq
-  FASTQC_POST ( CUTADAPT.out.reads )
+  // build bowtie2 index for viral refseq
+  BOWTIE2_BUILD ( params.refseq_fasta )
+  ch_versions = ch_versions.mix ( BOWTIE2_BUILD.out.versions )
 
-  
+  // map trimmed reads to refseq
+  BOWTIE2_ALIGN(CUTADAPT.out.reads,
+            BOWTIE2_BUILD.out.index,
+            false, // save unaligned
+            true)  // sort bam: why not? 
+
+  ch_versions = ch_versions.mix ( BOWTIE2_ALIGN.out.versions )
+
+  // use samtools to quantify the # of reads mapping to each refseq
+  EXTRACT_READ_MAPPING_COUNTS ( BOWTIE2_ALIGN.out.bam )
+
+  // prepend sample ID onto read counts
+  PREPEND_TSV_WITH_ID ( EXTRACT_READ_MAPPING_COUNTS.out.tsv )
+
+  // create main table outputs
+  MAKE_SEGMENT_TABLE( PREPEND_TSV_WITH_ID.out.prepended_tsv_file.collectFile (name: 'all_read_counts.txt') )
 
   //                                                                          
   // MODULE: Pipeline reporting                                               

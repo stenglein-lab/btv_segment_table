@@ -3,3 +3,4 @@
 *.nextflow
 work
 results
+.nextflow*
