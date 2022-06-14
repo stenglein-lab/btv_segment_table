@@ -12,8 +12,10 @@ A pipeline to quantify #s of reads mapping to bluetongue virus (BTV) segments in
 **Step 4:** actually run the pipeline.  Use netflow to run the pipeline.  This command line tells nextflow to download the pipeline code from [this repository](https://github.com/stenglein-lab/btv_segment_table) and to run it using singularity to handle software [dependencies](#dependencies).  You must tell the pipeline where your fastq files are, using the --fastq_dir option.
 
 ```
-nextflow run stenglein-lab/btv_segment_table -profile singularity --fastq_dir /path/to/fastq
+nextflow run stenglein-lab/btv_segment_table -resume -profile singularity --fastq_dir /path/to/fastq
 ```
+
+Adding the [-resume option](https://www.nextflow.io/docs/latest/cli.html#run) tells nextflow to start off where it left off, if for some reason it had been interrupted during the previous run.  
 
 ## Output
 
@@ -46,7 +48,6 @@ The pipeline uses singularity containers to run programs like bowtie2 and R.  To
 singularity --version
 ```
 
-
 Singularity containers will be automatically downloaded and stored in a directory named `singularity_cacheDir` in your home directory.  They will only be downloaded once.
 
 
@@ -59,7 +60,7 @@ The BTV reference sequences must be supplied to the pipeline in FASTA format.  T
 It is possible to provide a FASTA file with different BTV reference sequences.  When you run the pipeline, simply use the --refseq_fasta command line option, for instance:
 
 ```
-nextflow run stenglein-lab/btv_segment_table -profile singularity --fastq_dir /path/to/fastq --refseq_fasta /path/to/btv/refseq.fasta
+nextflow run stenglein-lab/btv_segment_table -resume -profile singularity --fastq_dir /path/to/fastq --refseq_fasta /path/to/btv/refseq.fasta
 ```
 
 #### Reference sequence naming
@@ -73,7 +74,7 @@ See [this file](./input/refseq/btv_refseq.fasta) for an example of BTV reference
 The pipeline uses cutadapt to trim primers off of reads.  The primer sequences should supplied in a FASTA format file.  The pipeline uses [this file](./input/refseq/BTV_primers.fasta) of primer sequences by default.  A different file can be supplied using the --primers_to_trim_file option, e.g.:
 
 ```
-nextflow run stenglein-lab/btv_segment_table -profile singularity --fastq_dir /path/to/fastq --primers_to_trim_file /path/to/btv/primer_sequences.fasta
+nextflow run stenglein-lab/btv_segment_table -resume -profile singularity --fastq_dir /path/to/fastq --primers_to_trim_file /path/to/btv/primer_sequences.fasta
 ```
 
 ### All configuration options
@@ -82,7 +83,7 @@ The [nextflow.config](./nextflow.config) file contains default values for all co
 
 ```
 # run pipeline with bowtie2 local mode instead of default end-to-end
-nextflow run stenglein-lab/btv_segment_table -profile singularity --bt_mode local
+nextflow run stenglein-lab/btv_segment_table -resume -profile singularity --bt_mode local
 ```
 
 
