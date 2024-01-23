@@ -25,7 +25,7 @@ process MAKE_SEGMENT_TABLE {
     cp $tsv all_segment_counts_tidy.txt
 
     # make a slightly untidy table too
-    Rscript ${params.script_dir}/make_segment_table.R $tsv segment_tables.txt
+    make_segment_table.R $tsv segment_tables.txt
     
 
     cat <<-END_VERSIONS > versions.yml
